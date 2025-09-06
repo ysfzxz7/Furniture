@@ -31,7 +31,7 @@ const ResetPassword = () => {
         </div>
         <div className="flex justify-end gap-2">
           <Link
-            to={"http://localhost:5173/Profile"}
+            to={"/Admin"}
             className="bg-red-600 font-bold text-white cursor-pointer text-xs px-3 py-1 rounded hover:bg-red-700"
           >
             Cancel

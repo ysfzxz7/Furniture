@@ -1,7 +1,11 @@
 import { useState } from "react";
 import { IoClose } from "react-icons/io5";
 
+import useNotification from "../../Store/PopUp";
+
 const SmallCart = () => {
+  const { isvisible, togglePopUp } = useNotification();
+
   const [qte, setQte] = useState(0);
   const handleadd = () => {
     setQte((prev) => prev + 1);
@@ -14,8 +18,15 @@ const SmallCart = () => {
   };
 
   return (
-    <div className="absolute bg-white top-0 right-0 m-10 flex px-5 py-2 items-center ">
-      <div className="absolute top-1 right-1">
+    <div
+      className={`${
+        isvisible == false ? "hidden" : "absolute"
+      } absolute bg-white top-0 right-0 m-10 flex px-5 py-2 items-center `}
+    >
+      <div
+        className="absolute top-1 right-1 cursor-pointer"
+        onClick={togglePopUp}
+      >
         <IoClose />
       </div>
 
