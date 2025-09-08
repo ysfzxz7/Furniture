@@ -1,7 +1,4 @@
 @import "tailwindcss";
-
-input:focus {
+/* input:focus {
   all: unset;
-  border: 1px solid gray;
-  border-radius: 5px;
-}
+} */
