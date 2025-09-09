@@ -9,6 +9,8 @@ import Products from "./componants/panel/Products";
 import Users from "./componants/panel/users";
 import Historique from "./componants/panel/Historique";
 import Admins from "./componants/panel/users/Admins";
+import CreateUser from "./componants/panel/users/CreateUser";
+import CreateProduct from "./componants/panel/Create_products";
 
 const routes = createBrowserRouter([
   {
@@ -32,20 +34,20 @@ const routes = createBrowserRouter([
         element: <Products />,
       },
       {
+        path: "CreateProducts",
+        element: <CreateProduct />,
+      },
+      {
         path: "users",
         element: <Users />,
         children: [
           {
-            path: "admins",
+            path: "",
             element: <Admins />,
           },
           {
-            path: "managers",
-            element: <>mangers</>,
-          },
-          {
-            path: "employer",
-            element: <>employee</>,
+            path: "add_user",
+            element: <CreateUser />,
           },
         ],
       },

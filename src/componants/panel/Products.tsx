@@ -13,7 +13,7 @@ const Products = () => {
         <h1 className="font-bold">Products List</h1>
         <Link
           className="bg-green-600 text-white px-3 rounded text-sm pt-[2px] hover:bg-green-700 flex items-center gap-1"
-          to={"#"}
+          to={"/Admin/CreateProducts"}
         >
           <IoMdAdd className="text-white" />
           Add Product
