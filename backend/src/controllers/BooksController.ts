@@ -1,9 +1,12 @@
 import { Request, Response } from "express";
 import { checkSchema, validationResult } from "express-validator";
-import { BookModel } from "../models/BookModel";
+import { ProductModel } from "../models/ProductModel";
 import { uploadImage } from "../utils/Uploader";
 
-const getBook = async (req: Request, res: Response): Promise<Response | void> => {
+const getBook = async (
+  req: Request,
+  res: Response
+): Promise<Response | void> => {
   // check if there are any errors
   const errors = validationResult(req).array();
   if (errors?.length > 0) return res.status(401).json({ message: errors[0] });
@@ -12,7 +15,7 @@ const getBook = async (req: Request, res: Response): Promise<Response | void> =>
     const bookdId = req.params.bookId;
     const userId = req.adminId;
 
-    const book = await BookModel.findOne({ adminId: userId, _id: bookdId });
+    const book = await ProductModel.findOne({ adminId: userId, _id: bookdId });
     if (!book) return res.status(404).json({ message: "Book not found!" });
 
     return res.status(201).json(book);
@@ -21,10 +24,14 @@ const getBook = async (req: Request, res: Response): Promise<Response | void> =>
   }
 };
 
-const updateBook = async (req: Request, res: Response): Promise<Response | void> => {
+const updateBook = async (
+  req: Request,
+  res: Response
+): Promise<Response | void> => {
   // check if there are any errors
   const errors = validationResult(req).array();
-  if (errors?.length > 0) return res.status(400).json({ message: errors[0].msg });
+  if (errors?.length > 0)
+    return res.status(400).json({ message: errors[0].msg });
 
   try {
     const adminId = req.adminId;
@@ -38,12 +45,15 @@ const updateBook = async (req: Request, res: Response): Promise<Response | void>
 
     console.log("Book Body:", req.body);
 
-    const book = await BookModel.findOneAndUpdate({ _id: bookId, adminId }, { ...req.body });
+    const book = await ProductModel.findOneAndUpdate(
+      { _id: bookId, adminId },
+      { ...req.body }
+    );
     await book?.save();
     if (!book) {
-      return res
-        .status(404)
-        .json({ message: "Book not found or you are not authorized to access it!" });
+      return res.status(404).json({
+        message: "Book not found or you are not authorized to access it!",
+      });
     }
 
     return res.status(201).json(book);
@@ -53,7 +63,10 @@ const updateBook = async (req: Request, res: Response): Promise<Response | void>
   }
 };
 
-const deleteBook = async (req: Request, res: Response): Promise<Response | void> => {
+const deleteBook = async (
+  req: Request,
+  res: Response
+): Promise<Response | void> => {
   const errors = validationResult(req).array();
   if (errors?.length) return res.status(400).json({ message: errors[0].msg });
 
@@ -61,7 +74,10 @@ const deleteBook = async (req: Request, res: Response): Promise<Response | void>
     const bookId = req.body.bookId;
     const adminId = req.adminId;
 
-    const book = await BookModel.findByIdAndDelete({ _id: bookId, adminId });
+    const book = await ProductModel.findByIdAndDelete({
+      _id: bookId,
+      adminId,
+    });
     if (!book) return res.status(404).json({ message: "Book not found!" });
 
     return res.status(201).json(book);
@@ -81,7 +97,10 @@ const deleteBook = async (req: Request, res: Response): Promise<Response | void>
  *
  * @example GET /api/user/books/related
  */
-const getRelatedBooks = async (req: Request, res: Response): Promise<Response | void> => {
+const getRelatedBooks = async (
+  req: Request,
+  res: Response
+): Promise<Response | void> => {
   // validate the query params
   try {
     const result = await checkSchema({
@@ -90,7 +109,10 @@ const getRelatedBooks = async (req: Request, res: Response): Promise<Response | 
         custom: {
           options: (value) => {
             if (typeof value === "string") return true;
-            if (Array.isArray(value) && value.every((item) => typeof item === "string"))
+            if (
+              Array.isArray(value) &&
+              value.every((item) => typeof item === "string")
+            )
               return true;
             throw new Error("Genres must contains at least 1 Genre!");
           },
@@ -111,7 +133,8 @@ const getRelatedBooks = async (req: Request, res: Response): Promise<Response | 
     }).run(req);
 
     const errors = validationResult(result).array();
-    if (errors?.length > 0) return res.status(400).json({ message: errors[0].msg });
+    if (errors?.length > 0)
+      return res.status(400).json({ message: errors[0].msg });
   } catch (error) {
     return res.status(400).json({ messge: (error as Error).message });
   }
@@ -126,18 +149,19 @@ const getRelatedBooks = async (req: Request, res: Response): Promise<Response | 
 
     const genersArray = genres?.toString().split(",");
 
-    const books = await BookModel.find({
+    const books = await ProductModel.find({
       _id: { $ne: current },
       genres: { $in: genersArray },
     });
-    if (!books) return res.status(404).json({ message: "No related books found" });
+    if (!books)
+      return res.status(404).json({ message: "No related books found" });
 
     return res.status(200).json(books);
   } catch (error) {
     console.error(error);
-    return res
-      .status(500)
-      .json({ message: "Something went wrong during fetching the related books" });
+    return res.status(500).json({
+      message: "Something went wrong during fetching the related books",
+    });
   }
 };
 

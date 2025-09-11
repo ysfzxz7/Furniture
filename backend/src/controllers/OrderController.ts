@@ -1,22 +1,27 @@
 import { Request, Response } from "express";
 import { checkSchema, validationResult } from "express-validator";
-import { BookModel } from "../models/BookModel";
+import { ProductModel } from "../models/ProductModel";
 import { OrderModel } from "../models/OrderModel";
 import { ObjectId } from "mongodb";
 import Stripe from "stripe";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string);
 
-const orderBook = async (req: Request, res: Response): Promise<Response | void> => {
+const orderBook = async (
+  req: Request,
+  res: Response
+): Promise<Response | void> => {
   const errors = validationResult(req).array();
-  if (errors?.length > 0) return res.status(400).json({ message: errors[0].msg });
+  if (errors?.length > 0)
+    return res.status(400).json({ message: errors[0].msg });
 
   try {
     const { bookId, quantity } = req.body;
     const userId = req.userId;
 
-    const book = await BookModel.findOne({ _id: bookId });
-    if (!book) return res.status(404).json({ message: "Sorry book not found!" });
+    const book = await ProductModel.findOne({ _id: bookId });
+    if (!book)
+      return res.status(404).json({ message: "Sorry book not found!" });
 
     const total = Math.abs(quantity) * book.price;
 
@@ -35,11 +40,16 @@ const orderBook = async (req: Request, res: Response): Promise<Response | void> 
 
     return res.status(200).json(order);
   } catch (error) {
-    return res.status(500).json({ message: "Something went wrong during book ordering!" });
+    return res
+      .status(500)
+      .json({ message: "Something went wrong during book ordering!" });
   }
 };
 
-const getOrders = async (req: Request, res: Response): Promise<Response | void> => {
+const getOrders = async (
+  req: Request,
+  res: Response
+): Promise<Response | void> => {
   try {
     const userId = req.userId;
 
@@ -71,35 +81,51 @@ const getOrders = async (req: Request, res: Response): Promise<Response | void> 
       },
     ]);
 
-    if (!orders || orders.length == 0) return res.status(404).json({ message: "No order yet!" });
+    if (!orders || orders.length == 0)
+      return res.status(404).json({ message: "No order yet!" });
 
     return res.status(200).json(orders);
   } catch (error) {
     console.log(error);
-    return res.status(500).json({ message: "Something went wrong during the orders fetching!" });
+    return res
+      .status(500)
+      .json({ message: "Something went wrong during the orders fetching!" });
   }
 };
 
-const removeOrder = async (req: Request, res: Response): Promise<Response | void> => {
+const removeOrder = async (
+  req: Request,
+  res: Response
+): Promise<Response | void> => {
   const errors = validationResult(req).array();
-  if (errors?.length > 0) return res.status(400).json({ message: errors[0].msg });
+  if (errors?.length > 0)
+    return res.status(400).json({ message: errors[0].msg });
 
   try {
     const userId = req.userId;
     const orderId = req.body.orderId;
 
     const order = await OrderModel.findOneAndDelete({ _id: orderId, userId });
-    if (!order) return res.status(404).json({ message: "Error order not found!" });
+    if (!order)
+      return res.status(404).json({ message: "Error order not found!" });
 
-    return res.status(200).json({ message: `Your order is successfully removed: ${order._id}` });
+    return res
+      .status(200)
+      .json({ message: `Your order is successfully removed: ${order._id}` });
   } catch (error) {
-    return res.status(500).json({ message: "Something went wrong during the order deletion" });
+    return res
+      .status(500)
+      .json({ message: "Something went wrong during the order deletion" });
   }
 };
 
-const updateQuantity = async (req: Request, res: Response): Promise<Response | void> => {
+const updateQuantity = async (
+  req: Request,
+  res: Response
+): Promise<Response | void> => {
   const errors = validationResult(req).array();
-  if (errors?.length > 0) return res.status(400).json({ message: errors[0].msg });
+  if (errors?.length > 0)
+    return res.status(400).json({ message: errors[0].msg });
 
   try {
     const { orderId, quantity } = req.body;
@@ -112,14 +138,14 @@ const updateQuantity = async (req: Request, res: Response): Promise<Response | v
 
     if (!order) return res.status(404).json({ message: "Order not found!" });
 
-    const book = await BookModel.findOne({
+    const book = await ProductModel.findOne({
       _id: order.bookId,
     });
 
     if (!book)
-      return res
-        .status(404)
-        .json({ message: "The book you ordering is removed or isn't in stock!" });
+      return res.status(404).json({
+        message: "The book you ordering is removed or isn't in stock!",
+      });
 
     if (quantity > 0) {
       order.totalPrice = quantity * book.price;
@@ -136,13 +162,19 @@ const updateQuantity = async (req: Request, res: Response): Promise<Response | v
     return res.status(201).json(order);
   } catch (error) {
     console.log((error as Error).message);
-    return res.status(500).json({ message: "Somthing went wrong during the quantity update" });
+    return res
+      .status(500)
+      .json({ message: "Somthing went wrong during the quantity update" });
   }
 };
 
-const getOrder = async (req: Request, res: Response): Promise<Response | void> => {
+const getOrder = async (
+  req: Request,
+  res: Response
+): Promise<Response | void> => {
   const errors = validationResult(req).array();
-  if (errors?.length > 0) return res.status(400).json({ message: errors[0].msg });
+  if (errors?.length > 0)
+    return res.status(400).json({ message: errors[0].msg });
 
   try {
     const orderId = req.params.orderId;
@@ -157,11 +189,16 @@ const getOrder = async (req: Request, res: Response): Promise<Response | void> =
 
     return res.status(200).json(order);
   } catch (error) {
-    return res.status(500).json({ message: "Something went wrong while fetching the order!" });
+    return res
+      .status(500)
+      .json({ message: "Something went wrong while fetching the order!" });
   }
 };
 
-const confirmOrders = async (req: Request, res: Response): Promise<Response | void> => {
+const confirmOrders = async (
+  req: Request,
+  res: Response
+): Promise<Response | void> => {
   // confirmation query validation
   try {
     const result = checkSchema({
@@ -172,7 +209,9 @@ const confirmOrders = async (req: Request, res: Response): Promise<Response | vo
             if (typeof value === "string" && value.length >= 24) return true;
             if (
               Array.isArray(value) &&
-              value.every((item) => typeof item === "string" && item.length >= 24)
+              value.every(
+                (item) => typeof item === "string" && item.length >= 24
+              )
             ) {
               return true;
             }
@@ -183,7 +222,8 @@ const confirmOrders = async (req: Request, res: Response): Promise<Response | vo
     });
 
     const errors = validationResult(result).array();
-    if (errors?.length > 0) return res.status(400).json({ message: errors[0].msg });
+    if (errors?.length > 0)
+      return res.status(400).json({ message: errors[0].msg });
   } catch (error) {
     return res.status(400).json({ message: (error as Error).message });
   }
@@ -203,7 +243,12 @@ const confirmOrders = async (req: Request, res: Response): Promise<Response | vo
     for (let i = 0; i < orders.length; i++) {
       const book = await BookModel.findOne({ _id: orders[i].bookId });
       if (book) {
-        console.log("Book price:", book?.price, "quantity:", orders[i]?.quantity);
+        console.log(
+          "Book price:",
+          book?.price,
+          "quantity:",
+          orders[i]?.quantity
+        );
         total += book?.price * orders[i].quantity;
         calculatedOrders.push(orders[i]._id.toString());
       }
@@ -223,7 +268,9 @@ const confirmOrders = async (req: Request, res: Response): Promise<Response | vo
     });
 
     if (!paymentIntent.client_secret) {
-      return res.status(500).json({ message: "Error creating payment intent!" });
+      return res
+        .status(500)
+        .json({ message: "Error creating payment intent!" });
     }
 
     const response = {
@@ -235,10 +282,17 @@ const confirmOrders = async (req: Request, res: Response): Promise<Response | vo
     return res.status(200).json(response);
   } catch (error) {
     console.log(error);
-    return res
-      .status(500)
-      .json({ message: "Something went wrong during the confirmation process!" });
+    return res.status(500).json({
+      message: "Something went wrong during the confirmation process!",
+    });
   }
 };
 
-export { orderBook, getOrders, removeOrder, updateQuantity, getOrder, confirmOrders };
+export {
+  orderBook,
+  getOrders,
+  removeOrder,
+  updateQuantity,
+  getOrder,
+  confirmOrders,
+};

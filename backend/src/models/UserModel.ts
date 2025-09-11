@@ -1,5 +1,5 @@
 import mongoose, { Model, Schema } from "mongoose";
-import { UserType } from "../types/Type2";
+import { UserType } from "../types/Type";
 
 const userSchema = new Schema<UserType>({
   username: { type: String, required: true },
@@ -13,7 +13,7 @@ const userSchema = new Schema<UserType>({
   image: { type: String },
 });
 
-export const User: Model<UserType> = mongoose.model<UserType>(
+export const UserModel: Model<UserType> = mongoose.model<UserType>(
   "User",
   userSchema
 );

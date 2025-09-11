@@ -1,7 +1,7 @@
 import mongoose, { Model, Schema } from "mongoose";
-import { OrderType } from "../types/Type2";
+import { OrderType } from "../types/Type";
 
-const OrderModel = new Schema<OrderType>({
+const OrderSchema = new Schema<OrderType>({
   orderBy: {
     type: Schema.Types.ObjectId,
     ref: "User",
@@ -20,4 +20,7 @@ const OrderModel = new Schema<OrderType>({
   notes: { type: String, required: true },
 });
 
-const Order: Model<OrderType> = mongoose.model<OrderType>("Order", OrderModel);
+export const OrderModel: Model<OrderType> = mongoose.model<OrderType>(
+  "Order",
+  OrderSchema
+);

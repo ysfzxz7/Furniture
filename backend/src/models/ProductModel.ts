@@ -1,5 +1,5 @@
 import mongoose, { Model, Schema } from "mongoose";
-import { ProductType } from "../types/Type2";
+import { ProductType } from "../types/Type";
 
 const productSchema = new Schema<ProductType>({
   name: { type: String, required: true },
@@ -15,7 +15,7 @@ const productSchema = new Schema<ProductType>({
   addedBy: { type: Schema.Types.ObjectId, ref: "User", required: true },
 });
 
-const Product: Model<ProductType> = mongoose.model<ProductType>(
+export const ProductModel: Model<ProductType> = mongoose.model<ProductType>(
   "Product",
   productSchema
 );
