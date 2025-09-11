@@ -11,6 +11,7 @@ import Historique from "./componants/panel/Historique";
 import Admins from "./componants/panel/users/Admins";
 import CreateUser from "./componants/panel/users/CreateUser";
 import CreateProduct from "./componants/panel/Create_products";
+import UserProfile from "./componants/panel/users/UserProfile";
 
 const routes = createBrowserRouter([
   {
@@ -48,6 +49,10 @@ const routes = createBrowserRouter([
           {
             path: "add_user",
             element: <CreateUser />,
+          },
+          {
+            path: ":id",
+            element: <UserProfile />,
           },
         ],
       },

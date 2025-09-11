@@ -32,7 +32,8 @@ const Admins = () => {
         <div className="flex justify-between my-2 items-center">
           <h1 className="font-bold">List of users</h1>
           <h1 className="text-sm">
-            Number of users : <span className="font-semibold">45</span>
+            Number of users :{" "}
+            <span className="font-semibold">{usersData.length}</span>
           </h1>
         </div>
         <div className="flex justify-end">
@@ -108,7 +109,9 @@ const Admins = () => {
               <div className="col-span-1 flex text-sm gap-2">
                 <LuPencilLine className="cursor-pointer" />
                 <MdDeleteForever className="cursor-pointer" />
-                <IoEye className="cursor-pointer" />
+                <Link to={`${user.id}`}>
+                  <IoEye className="cursor-pointer" />
+                </Link>
               </div>
             </div>
           ))}

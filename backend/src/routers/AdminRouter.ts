@@ -6,6 +6,7 @@ import multer from "multer";
 import verifyAdminToken from "../middleware/AdminAuth";
 
 const router = express.Router();
+
 const storage = multer.memoryStorage();
 const upload = multer({
   storage: storage,
@@ -14,7 +15,10 @@ const upload = multer({
   },
 });
 
-router.get("/validate-token", adminController.validateToken as express.RequestHandler);
+router.get(
+  "/validate-token",
+  adminController.validateToken as express.RequestHandler
+);
 
 router.post(
   "/register",
@@ -68,16 +72,28 @@ router.post(
       .isLength({ min: 1 })
       .withMessage("A book must have at least one genre")
       .withMessage("Book Genre is required"),
-    body("publicationDate").isDate().notEmpty().withMessage("Publication Date is required"),
-    body("pages").isNumeric().notEmpty().withMessage("Book Page Count is required"),
+    body("publicationDate")
+      .isDate()
+      .notEmpty()
+      .withMessage("Publication Date is required"),
+    body("pages")
+      .isNumeric()
+      .notEmpty()
+      .withMessage("Book Page Count is required"),
     body("isbn")
       .isNumeric()
       .isLength({ min: 10 })
       .withMessage("Book ISBN not valid")
       .notEmpty()
       .withMessage("Book ISBN is required"),
-    body("price").isNumeric().notEmpty().withMessage("Book Price count is required"),
-    body("stockQuantity").isNumeric().notEmpty().withMessage("Stock Quantity is required"),
+    body("price")
+      .isNumeric()
+      .notEmpty()
+      .withMessage("Book Price count is required"),
+    body("stockQuantity")
+      .isNumeric()
+      .notEmpty()
+      .withMessage("Stock Quantity is required"),
   ],
   adminController.addBook as express.RequestHandler
 );
@@ -85,7 +101,13 @@ router.post(
 router.get(
   "/book/:bookId",
   verifyAdminToken as express.RequestHandler,
-  [param("bookId").notEmpty().isHexadecimal().isLength({ min: 24 }).withMessage("Invalid book ID")],
+  [
+    param("bookId")
+      .notEmpty()
+      .isHexadecimal()
+      .isLength({ min: 24 })
+      .withMessage("Invalid book ID"),
+  ],
   bookController.getBook as express.RequestHandler
 );
 
@@ -109,15 +131,24 @@ router.post(
       .withMessage("Publication Date is required")
       .isISO8601()
       .withMessage("Invalid date format"),
-    body("pages").isNumeric().notEmpty().withMessage("Book Page Count is required"),
+    body("pages")
+      .isNumeric()
+      .notEmpty()
+      .withMessage("Book Page Count is required"),
     body("isbn")
       .isNumeric()
       .isLength({ min: 10 })
       .withMessage("Book ISBN not valid")
       .notEmpty()
       .withMessage("Book ISBN is required"),
-    body("price").isNumeric().notEmpty().withMessage("Book Price count is required"),
-    body("stockQuantity").isNumeric().notEmpty().withMessage("Stock Quantity is required"),
+    body("price")
+      .isNumeric()
+      .notEmpty()
+      .withMessage("Book Price count is required"),
+    body("stockQuantity")
+      .isNumeric()
+      .notEmpty()
+      .withMessage("Stock Quantity is required"),
   ],
   bookController.updateBook as express.RequestHandler
 );

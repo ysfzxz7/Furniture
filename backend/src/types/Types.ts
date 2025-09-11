@@ -5,6 +5,10 @@ export interface UserType {
   email: string;
   password: string;
 }
+export interface AdminType extends UserType {
+  phoneNumber: string;
+  joinDate: Date;
+}
 
 export interface BookType {
   adminId: mongoose.Types.ObjectId;
@@ -21,11 +25,6 @@ export interface BookType {
   stockQuantity: number;
   bookCover?: File;
   bookImageUrl?: string;
-}
-
-export interface AdminType extends UserType {
-  phoneNumber: string;
-  joinDate: Date;
 }
 
 export interface OrderType {

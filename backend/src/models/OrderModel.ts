@@ -1,29 +1,23 @@
-import mongoose, { Schema, Model } from "mongoose";
-import { OrderType } from "../types/Types";
+import mongoose, { Model, Schema } from "mongoose";
+import { OrderType } from "../types/Type2";
 
-const orderSchema = new Schema<OrderType>({
-  bookId: { type: mongoose.Schema.Types.ObjectId, ref: "book", required: true },
-  userId: { type: mongoose.Schema.Types.ObjectId, ref: "user", required: true },
-  adminId: { type: mongoose.Schema.Types.ObjectId, ref: "admin", required: true },
-  quantity: {
-    type: Number,
+const OrderModel = new Schema<OrderType>({
+  orderBy: {
+    type: Schema.Types.ObjectId,
+    ref: "User",
     required: true,
-    validate: {
-      validator: (value: number) => value >= 0,
-      message: "Quantity must be a non-negative number!",
-    },
   },
-  orderDate: { type: Date, required: true, default: Date.now },
-  delivered: { type: Boolean, required: true, default: false },
-  paid: { type: Boolean, required: true, default: false },
-  totalPrice: {
-    type: Number,
-    required: true,
-    validate: {
-      validator: (value: number) => value >= 0,
-      message: "Total price must be a non-negative number!",
+  products: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "Order", //must match order model
+      required: true,
     },
-  },
+  ],
+  orderStatus: { type: String, required: true },
+  createdAt: { type: Date, required: true, default: Date.now },
+  updatedAt: { type: Date, required: true },
+  notes: { type: String, required: true },
 });
 
-export const OrderModel: Model<OrderType> = mongoose.model<OrderType>("order", orderSchema);
+const Order: Model<OrderType> = mongoose.model<OrderType>("Order", OrderModel);

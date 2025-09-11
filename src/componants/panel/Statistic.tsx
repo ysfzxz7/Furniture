@@ -3,6 +3,7 @@ import { LuUsers } from "react-icons/lu";
 import { MdOutlineProductionQuantityLimits } from "react-icons/md";
 import { FiAlertTriangle } from "react-icons/fi";
 import Orders from "./Orders";
+import { Link } from "react-router-dom";
 
 const Statistics = () => {
   return (
@@ -18,7 +19,10 @@ const Statistics = () => {
             Total :<span className="font-bold"> 5 </span>
           </h5>
         </div>
-        <div className="space-y-5 p-5 bg-white rounded shadow-lg hover:bg-orange-200 cursor-pointer  ">
+        <Link
+          to={"/Admin/users"}
+          className="space-y-5 p-5 bg-white rounded shadow-lg hover:bg-orange-200 cursor-pointer  "
+        >
           <div className="flex justify-between ">
             <h1 className="font-bold">Users</h1>
             <LuUsers />
@@ -26,7 +30,7 @@ const Statistics = () => {
           <h5>
             <span className="text-sm">Total : </span>5
           </h5>
-        </div>
+        </Link>
         <div className="space-y-5 p-5 rounded bg-white shadow-lg hover:bg-orange-200 cursor-pointer  ">
           <div className="flex justify-between ">
             <h1 className="font-bold">Alerts</h1>
