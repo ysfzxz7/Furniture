@@ -1,9 +1,9 @@
 import { Request, Response } from "express";
 import bcrypt from "bcrypt";
 import jwt, { JwtPayload } from "jsonwebtoken";
-import { validationResult } from "express-validator";
+// import { validationResult } from "express-validator";
 import { UserModel } from "../models/UserModel";
-import { ProductModel } from "../models/ProductModel";
+// import { ProductModel } from "../models/ProductModel";
 
 /**
  * Validates a user's authentication token from cookies.
@@ -38,6 +38,7 @@ const validateToken = async (
 ): Promise<Response | void> => {
   try {
     const token = req.cookies["user_auth_token"];
+    console.log("backen hitted");
 
     if (!token) return res.status(301).json({ message: "Unauthorized" });
 
@@ -60,29 +61,37 @@ const validateToken = async (
  * @param res Express response
  * @returns Promise contains Express response or void
  */
+
 const userRegister = async (
   req: Request,
   res: Response
 ): Promise<Response | void> => {
   // verify if there's errors in request validation
-  const errors = validationResult(req).array();
-  if (errors?.length > 0)
-    return res.status(400).json({ message: errors[0].msg });
+  //   const errors = validationResult(req).array();
+  //   if (errors?.length > 0)
+  //     return res.status(400).json({ message: errors[0].msg });
 
   try {
-    const { username, email, password } = req.body;
+    const { username, email, password, role, firstName, lastName, image } =
+      req.body;
 
     const registred = await UserModel.findOne({ email });
     if (registred)
       return res.status(400).json({ message: "User already exists!" });
 
     const hashed = await bcrypt.hash(password, 10);
+
     const user = new UserModel({
       username: username,
       email: email,
       password: hashed,
+      role: role,
+      firstName: firstName,
+      lastName: lastName,
+      image: image,
     });
     await user.save();
+    console.log("saved");
 
     const token = jwt.sign(
       { userId: user._id },
@@ -99,6 +108,7 @@ const userRegister = async (
 
     res.status(200).json({ message: "Registered successfully." });
   } catch (error) {
+    console.log(error);
     return res.status(500).json({
       message:
         "Something went wrong. Please fill a valid info and try to register again",
@@ -115,14 +125,15 @@ const userRegister = async (
  *
  * @returns Promise contains Express response or void.
  */
+
 const userLogin = async (
   req: Request,
   res: Response
 ): Promise<Response | void> => {
   // verify if there's request errors
-  const errors = validationResult(req).array();
-  if (errors?.length > 0)
-    return res.status(400).json({ message: errors[0].msg });
+  //   const errors = validationResult(req).array();
+  //   if (errors?.length > 0)
+  //     return res.status(400).json({ message: errors[0].msg });
 
   try {
     const { email, password } = req.body;
@@ -169,7 +180,7 @@ const userLogout = async (
     const token = jwt.sign({}, process.env.USER_JWT_KEY as string, {
       expiresIn: "0d",
     });
-
+    console.log(token);
     res.cookie("user_auth_token", token, {
       expires: new Date("01/01/1990"),
       httpOnly: true,
@@ -184,47 +195,8 @@ const userLogout = async (
   }
 };
 
-const userBooks = async (
-  req: Request,
-  res: Response
-): Promise<Response | void> => {
-  try {
-    const books = await ProductModel.find({});
-    return res.status(200).json(books);
-  } catch (error) {
-    return res
-      .status(500)
-      .json({ message: "An error occured during fetching books!" });
-  }
+const test = async (req: Request, res: Response): Promise<Response | void> => {
+  res.send("backend hitted");
 };
 
-const userBook = async (
-  req: Request,
-  res: Response
-): Promise<Response | void> => {
-  const errors = validationResult(req).array();
-  if (errors?.length > 0)
-    return res.status(400).json({ message: errors[0].msg });
-
-  try {
-    const bookId = req.params.bookId;
-
-    const book = await ProductModel.findOne({ _id: bookId });
-    if (!book) return res.status(404).json({ message: "Book not found!" });
-
-    return res.status(200).json(book);
-  } catch (error) {
-    return res
-      .status(500)
-      .json({ message: "Something went wrong during the book fetching!" });
-  }
-};
-
-export {
-  validateToken,
-  userRegister,
-  userLogin,
-  userLogout,
-  userBooks,
-  userBook,
-};
+export { validateToken, test, userRegister, userLogin, userLogout };
