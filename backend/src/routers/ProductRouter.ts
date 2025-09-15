@@ -1,0 +1,33 @@
+import express, { RequestHandler } from "express";
+import * as ProductController from "../controllers/ProductController";
+import multer from "multer";
+
+const router = express.Router();
+
+router.post("/addProduct", ProductController.addProduct as RequestHandler);
+router.get(
+  "/getAllProducts",
+  ProductController.getAllProducts as RequestHandler
+);
+router.get(
+  "/getSingleProduct/:id",
+  ProductController.getSingleProducts as RequestHandler
+);
+router.delete(
+  "/deleteProduct/:id",
+  ProductController.deleteProducts as RequestHandler
+);
+
+const upload = multer();
+router.patch(
+  "/updateProduct/:id",
+
+  upload.none(),
+  ProductController.updateProduct as RequestHandler
+);
+router.get(
+  "/getDistinctCategories",
+  ProductController.getDistinctCategories as RequestHandler
+);
+
+export default router;

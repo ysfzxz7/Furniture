@@ -3,6 +3,7 @@ import bcrypt from "bcrypt";
 import jwt, { JwtPayload } from "jsonwebtoken";
 // import { validationResult } from "express-validator";
 import { UserModel } from "../models/UserModel";
+import { validationResult } from "express-validator";
 // import { ProductModel } from "../models/ProductModel";
 
 /**
@@ -131,9 +132,9 @@ const userLogin = async (
   res: Response
 ): Promise<Response | void> => {
   // verify if there's request errors
-  //   const errors = validationResult(req).array();
-  //   if (errors?.length > 0)
-  //     return res.status(400).json({ message: errors[0].msg });
+  const errors = validationResult(req).array();
+  if (errors?.length > 0)
+    return res.status(400).json({ message: errors[0].msg });
 
   try {
     const { email, password } = req.body;
