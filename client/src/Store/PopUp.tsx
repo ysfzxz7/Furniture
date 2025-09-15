@@ -7,7 +7,7 @@ type useNotificationType = {
 };
 
 const useNotification = create<useNotificationType>((set) => ({
-  isvisible: true,
+  isvisible: false,
   message: "Hello",
   togglePopUp: () => {
     set(() => ({

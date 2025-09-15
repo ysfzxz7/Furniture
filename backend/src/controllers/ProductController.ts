@@ -145,8 +145,6 @@ const updateProduct = async (
   try {
     const { id } = req.params;
     const newP = JSON.parse(req.body.newProduct);
-
-    console.log(newP);
     const oldProduct = await ProductModel.findById(id);
 
     if (!oldProduct) {
@@ -154,6 +152,12 @@ const updateProduct = async (
         success: false,
         message: "Product Not Found",
       });
+    }
+
+    if (req.file) {
+      const file = req.file as Express.Multer.File;
+      const url = await uploadImage(file);
+      newP.image = url as string;
     }
 
     const newProduct = await ProductModel.findByIdAndUpdate(id, newP, {

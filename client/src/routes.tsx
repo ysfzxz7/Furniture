@@ -1,5 +1,5 @@
 import { createBrowserRouter } from "react-router-dom";
-import HomePage from "./HomePage";
+import HomePage from "./componants/login/HomePage";
 import ResetPassword from "./componants/login/ResetPassWord";
 import Profile from "./componants/user/Profile";
 import Cart from "./componants/Cart/Cart";
@@ -12,6 +12,7 @@ import Admins from "./componants/panel/users/Admins";
 import CreateUser from "./componants/panel/users/CreateUser";
 import CreateProduct from "./componants/panel/Create_products";
 import UserProfile from "./componants/panel/users/UserProfile";
+import UpdateProduct from "./componants/panel/Update_products";
 
 const routes = createBrowserRouter([
   {
@@ -37,6 +38,10 @@ const routes = createBrowserRouter([
       {
         path: "CreateProducts",
         element: <CreateProduct />,
+      },
+      {
+        path: "update/:id",
+        element: <UpdateProduct />,
       },
       {
         path: "users",

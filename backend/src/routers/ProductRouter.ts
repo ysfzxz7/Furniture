@@ -22,7 +22,7 @@ const upload = multer();
 router.patch(
   "/updateProduct/:id",
 
-  upload.none(),
+  upload.single("image"),
   ProductController.updateProduct as RequestHandler
 );
 router.get(
