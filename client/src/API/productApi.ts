@@ -19,10 +19,22 @@ export const getSingleProduct = async (id: string): Promise<ProductType> => {
     `http://localhost:7000/api/product/getSingleProduct/${id}`
   );
   if (!res.ok) throw new Error("Failed to get product");
-  await useDelay(2000);
   const json: any = await res.json();
   return json.data;
 };
+
+/**
+ * get the length of the products
+ */
+
+export const getProductsCount = async () => {
+  const res = await fetch(
+    "http://localhost:7000/api/product/getAllProducts?count=true"
+  );
+  if (!res.ok) throw new Error("Field to get the count of the products");
+  return await res.json();
+};
+
 /**
  * getDistinctCategories - @async fetch func to get all distinc categories
  * @returns return a list of all available categories

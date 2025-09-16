@@ -1,33 +1,20 @@
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { getSingleProduct } from "../../API/productApi";
 import { useMutation, useQuery } from "@tanstack/react-query";
-
 import { useForm, type SubmitHandler } from "react-hook-form";
+import type { updateFormType } from "../../types/productType";
+import { useEffect } from "react";
+import Spinner from "../icons/spinner";
 
 const UpdateProduct = () => {
+  const navigate = useNavigate();
   const { id } = useParams();
   const { data, isLoading, isError, error } = useQuery({
     queryKey: ["product", id], // cache key
-    queryFn: () => getSingleProduct(id as string), // fetcher function
+    queryFn: async () => await getSingleProduct(id as string), // fetcher function
   });
-  interface updateFormType {
-    name: string;
-    categorie: string;
-    quantity: number;
-    minLevel: number;
-    supplier: string;
-    status: string;
-    description: string;
-    dateAdded: string;
-    lastUpdated: string;
-    addedBy: string;
-    image: FileList;
-  }
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<updateFormType>();
+
+  const { reset, register, handleSubmit } = useForm<updateFormType>();
 
   const mutation = useMutation({
     mutationFn: async (formData: FormData) => {
@@ -38,21 +25,37 @@ const UpdateProduct = () => {
           body: formData,
         }
       );
-      if (res.ok) console.log("updated");
       if (!res.ok) throw new Error("Field to update data");
       return await res.json();
     },
+    onSuccess: () => {
+      navigate("/Admin/products");
+    },
   });
+
+  useEffect(() => {
+    if (data) {
+      reset({
+        name: data.name,
+        description: data.description,
+        quantity: data.quantity,
+        minLevel: data.minLevel,
+        supplier: data.supplier,
+        categorie: data.category,
+        status: data.status,
+      });
+    }
+  }, [data, reset]);
 
   const handleSub: SubmitHandler<updateFormType> = (data) => {
     const formData = new FormData();
     const fd = {
       name: data.name,
-      category: "Electronics",
+      category: data.categorie,
       quantity: data.quantity,
       minLevel: data.minLevel,
       supplier: data.supplier,
-      status: "Low Stock",
+      status: data.status,
       description: data.description,
       lastUpdated: new Date(),
     };
@@ -63,14 +66,15 @@ const UpdateProduct = () => {
 
     mutation.mutate(formData);
   };
+
   return (
     <div className="min-h-[100vh] p-10">
-      <h1 className="font-bold text-xl mb-5">Create a new product</h1>
+      <h1 className="font-bold text-xl mb-5">Update product</h1>
 
       <div className="flex  justify-center bg-white py-5 rounded shadow">
         {isError && <>Error : {error}</>}
         {isLoading ? (
-          <>Loading ...</>
+          <Spinner w={10} h={10} />
         ) : (
           <form className="w-[40%] " onSubmit={handleSubmit(handleSub)}>
             <div className="my-5 mx-2">
@@ -80,13 +84,8 @@ const UpdateProduct = () => {
                   type="file"
                   accept="image/*"
                   className="file:bg-blue-500 file:text-white file:px-2  file:rounded hover:file:bg-blue-600 "
-                  {...register("image", { required: true })}
+                  {...register("image")}
                 />
-                {errors.image && (
-                  <p className="text-xs text-red-500 mt-2 underline">
-                    Image is required
-                  </p>
-                )}
               </div>
             </div>
             <div className=" w-full space-y-4">
@@ -98,11 +97,8 @@ const UpdateProduct = () => {
                   <input
                     className="border   border-gray-300  text-xs p-1  rounded focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 "
                     placeholder="Enter your Name"
-                    {...register("name", { required: true })}
+                    {...register("name")}
                   />
-                  {errors?.name && (
-                    <p className="text-xs text-red-400">name is required</p>
-                  )}
                 </div>
               </div>
               <div className="flex justify-between">
@@ -112,13 +108,8 @@ const UpdateProduct = () => {
                     className="border w-full  border-gray-300 text-xs p-1  rounded focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
                     placeholder="Enter Quantity"
                     type="number"
-                    {...register("quantity", { required: true })}
+                    {...register("quantity")}
                   />
-                  {errors.quantity && (
-                    <p className="text-xs text-red-500">
-                      Enter a valid Quantity
-                    </p>
-                  )}
                 </div>
               </div>
               <div className="flex justify-between">
@@ -128,13 +119,8 @@ const UpdateProduct = () => {
                     className="border w-full border-gray-300 text-xs p-1  rounded focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
                     placeholder="The min level"
                     type="text"
-                    {...register("minLevel", { required: true })}
+                    {...register("minLevel")}
                   />
-                  {errors.minLevel && (
-                    <p className="text-xs text-red-500">
-                      Min level is required
-                    </p>
-                  )}
                 </div>
               </div>
 
@@ -144,11 +130,8 @@ const UpdateProduct = () => {
                   <input
                     className="border  w-full border-gray-300 text-xs p-1  rounded focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
                     placeholder="Enter your Marque"
-                    {...register("supplier", { required: true })}
+                    {...register("supplier")}
                   />
-                  {errors.supplier && (
-                    <p className="text-xs text-red-500">Marque is required</p>
-                  )}
                 </div>
               </div>
               <div className="flex justify-between">
@@ -164,7 +147,8 @@ const UpdateProduct = () => {
               <div>
                 <label htmlFor="status">select status</label>
                 <select
-                  id="status"
+                  defaultValue={data?.status}
+                  {...register("status")}
                   className="bg-gray-50 border border-gray-300 text-gray-900 p-1 rounded focus:ring-blue-500 focus:border-blue-500  w-full text-xs "
                 >
                   <option>Status</option>
@@ -177,9 +161,9 @@ const UpdateProduct = () => {
                 </select>
               </div>
               <div className="">
-                <label htmlFor="Role">Select a role</label>
+                <label htmlFor="Role">Select a categorie</label>
                 <select
-                  id="Role"
+                  {...register("categorie")}
                   className="bg-gray-50 border border-gray-300 text-gray-900 text-xs rounded focus:ring-blue-500 focus:border-blue-500 block w-full p-1 "
                 >
                   <option>Categories</option>
@@ -189,12 +173,24 @@ const UpdateProduct = () => {
                   <option value="Audio">Audio </option>
                 </select>
               </div>
-              <div className="flex justify-end">
+              <div className="flex justify-end gap-2">
                 <button
                   type="submit"
-                  className="bg-green-600 text-white px-2 rounded pb-[2px] text-sm cursor-pointer "
+                  className={`  px-2 rounded pb-[1px] items-center text-sm cursor-pointer  flex ${
+                    mutation.isPending
+                      ? "bg-white text-black border border-gray-200 "
+                      : "bg-green-600 text-white"
+                  }`}
                 >
-                  Update Product
+                  <h3>Update Product</h3>
+                  {mutation.isPending && <Spinner w={6} h={6} />}
+                </button>
+                <button
+                  onClick={() => navigate("/Admin/products")}
+                  type="button"
+                  className={`  px-2 rounded pb-[1px] items-center text-sm cursor-pointer  flex bg-red-600 text-white`}
+                >
+                  Cancel
                 </button>
               </div>
             </div>

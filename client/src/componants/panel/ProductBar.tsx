@@ -1,11 +1,9 @@
-import { IoEye } from "react-icons/io5";
-import { LuPencilLine } from "react-icons/lu";
-import { MdDeleteForever } from "react-icons/md";
 import type { ProductType } from "../../types/productType";
 import type React from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { deleteProduct } from "../../API/productApi";
 import { Link } from "react-router-dom";
+import spinner from "../../assets/Spinner.svg";
 
 interface ProductsProp {
   prod: ProductType;
@@ -21,7 +19,6 @@ const ProductBar: React.FC<ProductsProp> = ({ prod }) => {
   });
   const handleDelete = () => {
     mutation.mutate(prod._id);
-    console.log(prod._id);
   };
   return (
     <div
@@ -50,21 +47,24 @@ const ProductBar: React.FC<ProductsProp> = ({ prod }) => {
       >
         {prod.status}
       </h4>
-      <div className="col-span-1  flex text-sm  gap-2">
+      <div className="col-span-1  flex text-sm  gap-2 items-center justify-center">
         <Link to={`/Admin/update/${prod._id}`}>
-          <LuPencilLine className="cursor-pointer" />
+          <h3 className="bg-blue-600 text-white text-xs rounded px-2 pb-[2px] cursor-pointer">
+            Update
+          </h3>
         </Link>
         <div>
           {mutation.isPending ? (
-            "X"
+            <img src={spinner} className="w-5 h-5" alt="" />
           ) : (
-            <MdDeleteForever
-              className="cursor-pointer"
+            <h3
               onClick={handleDelete}
-            />
+              className="bg-red-600 text-white text-xs rounded px-2 pb-[2px] cursor-pointer"
+            >
+              delete
+            </h3>
           )}
         </div>
-        <IoEye className="cursor-pointer" />
       </div>
     </div>
   );

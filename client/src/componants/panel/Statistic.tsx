@@ -4,8 +4,15 @@ import { MdOutlineProductionQuantityLimits } from "react-icons/md";
 import { FiAlertTriangle } from "react-icons/fi";
 import Orders from "./Orders";
 import { Link } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
+import { getProductsCount } from "../../API/productApi";
 
 const Statistics = () => {
+  const { data } = useQuery({
+    queryFn: getProductsCount,
+    queryKey: ["productsCount"],
+  });
+
   return (
     <div className="min-h-[100vh] p-10">
       <h1>Statistic</h1>
@@ -40,15 +47,19 @@ const Statistics = () => {
             <span className="text-sm">Total : </span>5
           </h5>
         </div>
-        <div className="space-y-5 p-5 bg-white rounded shadow-lg hover:bg-orange-200 cursor-pointer  ">
+        <Link
+          to={"/Admin/products"}
+          className="space-y-5 p-5 bg-white rounded shadow-lg hover:bg-orange-200 cursor-pointer  "
+        >
           <div className="flex justify-between ">
             <h1 className="font-bold">Products</h1>
             <MdOutlineProductionQuantityLimits />
           </div>
-          <h5>
-            <span className="text-sm">Total : </span>5
-          </h5>
-        </div>
+          <div>
+            <span className="text-sm">Total : </span>
+            <span className="font-bold">{data?.length}</span>
+          </div>
+        </Link>
       </div>
       <div>
         <Orders />

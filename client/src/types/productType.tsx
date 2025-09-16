@@ -12,3 +12,16 @@ export interface ProductType {
   addedBy: string;
   description: string;
 }
+export interface updateFormType {
+  name: string;
+  categorie: string;
+  quantity: number;
+  minLevel: number;
+  supplier: string;
+  status: string;
+  description: string;
+  dateAdded: string;
+  lastUpdated: string;
+  addedBy: string;
+  image: FileList;
+}
