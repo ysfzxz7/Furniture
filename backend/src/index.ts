@@ -4,8 +4,9 @@ import cookieParser from "cookie-parser";
 import "dotenv/config";
 import mongoose from "mongoose";
 import { v2 as cloudinary } from "cloudinary";
-import userRouter from "./routers/UserRouter";
+import authRouter from "./routers/authRouter";
 import productRouter from "./routers/ProductRouter";
+import userRouter from "./routers/usersRouter";
 
 const app = express();
 
@@ -38,8 +39,9 @@ app.use(
 );
 
 // app routers
-app.use("/api/user", userRouter);
+app.use("/api/auth", authRouter);
 app.use("/api/product", productRouter);
+app.use("/api/users", userRouter);
 
 app.listen(7000, () => {
   console.log("Server Running on http://localhost:7000");

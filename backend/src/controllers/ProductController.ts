@@ -15,28 +15,28 @@ const addProduct = async (
   res: Response
 ): Promise<Response | void> => {
   // First check if file exists
-  // if (!req.file) {
-  //   return res.status(400).json({ message: "Book cover image is required" });
-  // }
+  if (!req.file) {
+    return res.status(400).json({ message: "Book cover image is required" });
+  }
 
   // check if there some errors
   // const errors = validationResult(req).array();
   // if (errors?.length) return res.status(400).json({ message: errors[0].msg });
 
   try {
-    // const imageFile = req.file as Express.Multer.File;
-    // const imageUrl = await uploadImage(imageFile);
+    const imageFile = req.file as Express.Multer.File;
+    const imageUrl = await uploadImage(imageFile);
 
-    const product = new ProductModel(req.body);
-    // book.bookImageUrl = imageUrl;
-    product.image =
-      "https://plus.unsplash.com/premium_photo-1754759085924-d6c35cb5b7a4?q=80&w=870&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D";
-    // book.adminId = new mongoose.Types.ObjectId(req.adminId);
+    const product = new ProductModel(JSON.parse(req.body.newProduct));
+
+    product.image = imageUrl;
+    product.lastUpdated = new Date();
+
+    // add the id of the admin
+    //  book.adminId = new mongoose.Types.ObjectId(req.adminId);
     await product.save();
 
-    return res
-      .status(200)
-      .json({ message: "Book published successfully.", product });
+    return res.status(200).json({ message: "Book published successfully." });
   } catch (error) {
     console.log(error);
     return res.status(500).json({ message: "Something went wrong" });
@@ -56,6 +56,12 @@ const getAllProducts = async (
   res: Response
 ): Promise<Response | void> => {
   try {
+    const count = req.query.count;
+    if (count == "true") {
+      const length = await ProductModel.countDocuments();
+      return res.json({ length });
+    }
+
     const products = await ProductModel.find();
     res.status(200).json(products);
   } catch (error) {

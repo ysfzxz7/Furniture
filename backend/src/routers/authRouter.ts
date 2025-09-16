@@ -1,5 +1,5 @@
-import express, { query } from "express";
-import * as userController from "../controllers/UserController";
+import express from "express";
+import * as userController from "../controllers/authController";
 import { body } from "express-validator";
 
 const router = express.Router();

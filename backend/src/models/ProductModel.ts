@@ -9,10 +9,10 @@ const productSchema = new Schema<ProductType>({
   minLevel: { type: Number, required: true },
   supplier: { type: String, required: true },
   status: { type: String, required: true },
-  description: { type: String, required: true },
-  dateAdded: { type: Date, required: true },
+  description: { type: String },
+  dateAdded: { type: Date },
   lastUpdated: { type: Date, required: true },
-  addedBy: { type: Schema.Types.ObjectId, ref: "User", required: true },
+  addedBy: { type: Schema.Types.ObjectId, ref: "User" },
 });
 
 export const ProductModel: Model<ProductType> = mongoose.model<ProductType>(
