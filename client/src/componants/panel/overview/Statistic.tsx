@@ -2,16 +2,19 @@ import { TfiPackage } from "react-icons/tfi";
 import { LuUsers } from "react-icons/lu";
 import { MdOutlineProductionQuantityLimits } from "react-icons/md";
 import { FiAlertTriangle } from "react-icons/fi";
-import Orders from "./Orders";
+import Orders from "../orders/Orders";
 import { Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
-import { getProductsCount } from "../../API/productApi";
+import { getProductsCount } from "../../../API/productApi";
+import { useGetUsersLength } from "../../../API/userApi";
 
 const Statistics = () => {
-  const { data } = useQuery({
+  const { data: productLength } = useQuery({
     queryFn: getProductsCount,
     queryKey: ["productsCount"],
   });
+
+  const { data: usersLength } = useGetUsersLength();
 
   return (
     <div className="min-h-[100vh] p-10">
@@ -35,7 +38,8 @@ const Statistics = () => {
             <LuUsers />
           </div>
           <h5>
-            <span className="text-sm">Total : </span>5
+            <span className="text-sm">Total : </span>
+            {usersLength?.length}
           </h5>
         </Link>
         <div className="space-y-5 p-5 rounded bg-white shadow-lg hover:bg-orange-200 cursor-pointer  ">
@@ -57,7 +61,7 @@ const Statistics = () => {
           </div>
           <div>
             <span className="text-sm">Total : </span>
-            <span className="font-bold">{data?.length}</span>
+            <span className="font-bold">{productLength?.length}</span>
           </div>
         </Link>
       </div>

@@ -1,10 +1,13 @@
 import { IoMdSearch } from "react-icons/io";
 import { Link } from "react-router-dom";
 import { IoMdAdd } from "react-icons/io";
-import spinner from "../../assets/Spinner.svg";
 import { useQuery } from "@tanstack/react-query";
-import { fetchAllProducts, getDistinctCategories } from "../../API/productApi";
-import ProductBar from "./ProductBar";
+import {
+  fetchAllProducts,
+  getDistinctCategories,
+} from "../../../API/productApi";
+import ProductBar from "../products/ProductBar";
+import Spinner from "../../icons/spinner";
 
 const Products = () => {
   const { data, isLoading, isError, error } = useQuery({
@@ -81,7 +84,7 @@ const Products = () => {
             {isError && <>Error {error.message}</>}
             {isLoading ? (
               <div className="text-sm flex items-center justify-center font-bold text-center ">
-                <img className="w-10" src={spinner} alt="" />
+                <Spinner h={10} w={10} />
               </div>
             ) : (
               data?.map((product: any) => (

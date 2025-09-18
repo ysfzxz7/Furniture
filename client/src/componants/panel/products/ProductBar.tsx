@@ -1,9 +1,10 @@
-import type { ProductType } from "../../types/productType";
 import type React from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { deleteProduct } from "../../API/productApi";
 import { Link } from "react-router-dom";
-import spinner from "../../assets/Spinner.svg";
+
+import { deleteProduct } from "../../../API/productApi";
+import type { ProductType } from "../../../types/productType";
+import Spinner from "../../icons/spinner";
 
 interface ProductsProp {
   prod: ProductType;
@@ -55,7 +56,7 @@ const ProductBar: React.FC<ProductsProp> = ({ prod }) => {
         </Link>
         <div>
           {mutation.isPending ? (
-            <img src={spinner} className="w-5 h-5" alt="" />
+            <Spinner h={5} w={5} />
           ) : (
             <h3
               onClick={handleDelete}

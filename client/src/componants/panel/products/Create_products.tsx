@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useForm, type SubmitHandler } from "react-hook-form";
-import type { updateFormType } from "../../types/productType";
-import Spinner from "../icons/spinner";
+import type { updateFormType } from "../../../types/productType";
+import Spinner from "../../icons/spinner";
 import { useNavigate } from "react-router-dom";
 
 const CreateProduct = () => {

@@ -1,18 +1,21 @@
 import { createBrowserRouter } from "react-router-dom";
 import HomePage from "./componants/login/HomePage";
 import ResetPassword from "./componants/login/ResetPassWord";
-import Profile from "./componants/user/Profile";
 import Cart from "./componants/Cart/Cart";
-import DashBoard from "./componants/panel/Dashboard";
-import Statistics from "./componants/panel/Statistic";
-import Products from "./componants/panel/Products";
-import Users from "./componants/panel/users";
-import Historique from "./componants/panel/Historique";
-import Admins from "./componants/panel/users/Admins";
+import DashBoard from "./componants/panel/overview/Dashboard";
+import Statistics from "./componants/panel/overview/Statistic";
+import Products from "./componants/panel/products/Products";
+import Users from "./componants/panel/users/users";
 import CreateUser from "./componants/panel/users/CreateUser";
-import CreateProduct from "./componants/panel/Create_products";
+import CreateProduct from "./componants/panel/products/Create_products";
 import UserProfile from "./componants/panel/users/UserProfile";
-import UpdateProduct from "./componants/panel/Update_products";
+import UpdateProduct from "./componants/panel/products/Update_products";
+import AllUsers from "./componants/panel/users/allUsers";
+import UpdateUser from "./componants/panel/users/UpdateUser";
+import User from "./componants/user/User";
+import Catalogue from "./componants/user/Catalogue";
+import MyProfile from "./componants/user/MyProfile";
+import MyOrder from "./componants/user/MyOrder";
 
 const routes = createBrowserRouter([
   {
@@ -20,15 +23,15 @@ const routes = createBrowserRouter([
     element: <HomePage />,
   },
   {
-    path: "Admin",
+    path: "admin",
     element: <DashBoard />,
     children: [
       {
         path: "",
-        element: <Profile />,
+        element: <Statistics />,
       },
       {
-        path: "statistic",
+        path: "Statistic",
         element: <Statistics />,
       },
       {
@@ -49,11 +52,15 @@ const routes = createBrowserRouter([
         children: [
           {
             path: "",
-            element: <Admins />,
+            element: <AllUsers />,
           },
           {
             path: "add_user",
             element: <CreateUser />,
+          },
+          {
+            path: "updateUser/:id",
+            element: <UpdateUser />,
           },
           {
             path: ":id",
@@ -62,12 +69,26 @@ const routes = createBrowserRouter([
         ],
       },
       {
-        path: "Historique",
-        element: <Historique />,
-      },
-      {
         path: "cart",
         element: <Cart />,
+      },
+    ],
+  },
+  {
+    path: "user",
+    element: <User />,
+    children: [
+      {
+        path: "",
+        element: <Catalogue />,
+      },
+      {
+        path: "Myorder",
+        element: <MyOrder />,
+      },
+      {
+        path: "MyProfile",
+        element: <MyProfile />,
       },
     ],
   },

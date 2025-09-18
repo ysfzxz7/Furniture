@@ -1,20 +1,20 @@
 import { useForm, type SubmitHandler } from "react-hook-form";
 import { LuPencilLine } from "react-icons/lu";
-import type { userType } from "../../../types/userType";
-import { useCreateUser } from "../../../API/userApi";
+import type { userType, userType1 } from "../../../types/userType";
+import { useNavigate, useParams } from "react-router-dom";
+import { useGetSingleUser, useUpdateUser } from "../../../API/userApi";
+import { useEffect } from "react";
 
-const CreateUser = () => {
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<userType>();
+const UpdateUser = () => {
+  const navigate = useNavigate();
+  const { id } = useParams();
+  const { data } = useGetSingleUser(id as string);
+  const mutation = useUpdateUser(id as string);
 
-  const mutation = useCreateUser();
+  const { register, handleSubmit, reset } = useForm<userType>();
 
   const onSubmit: SubmitHandler<userType> = (data: userType) => {
     const formData = new FormData();
-
     formData.append(
       "NewUser",
       JSON.stringify({
@@ -24,22 +24,35 @@ const CreateUser = () => {
         email: data.email,
         phone: data.phone,
         role: data.role,
-        password: data.password,
-        retypePassword: data.retypePassword,
       })
     );
     if (data.image) {
       formData.append("image", data.image[0]);
     }
 
-    console.log(data);
     mutation.mutate(formData);
   };
+
+  useEffect(() => {
+    if (data) {
+      const user: userType1 = data.user;
+      reset({
+        firstName: user.firstName,
+        lastName: user.lastName,
+        email: user.email,
+        role: user.role,
+        phone: user.phone,
+        username: user.username,
+      });
+    }
+  }, [data, reset]);
+
+  mutation.isSuccess && navigate(0);
   return (
     <div className="min-h-[100vh] p-10">
       <h1 className="font-bold text-xl mb-5">Create a new user</h1>
       <div className="flex  justify-center bg-white py-5 rounded shadow">
-        <div className="w-[40%] ">
+        <div className=" lg:w-[40%] w-[50%] ">
           {/** create user form */}
           <form className=" w-full space-y-4" onSubmit={handleSubmit(onSubmit)}>
             <div className="my-5">
@@ -48,37 +61,28 @@ const CreateUser = () => {
                   <LuPencilLine className="" />
                 </div>
                 <img
-                  src="https://placehold.co/100x100"
-                  className="rounded-full mb-2"
+                  src={data?.user.image}
+                  className="rounded-full mb-2 w-20 h-20"
                   alt=""
                 />
               </div>
               <div>
                 <input
                   type="file"
-                  accept="image/*"
                   className="file:bg-blue-500 file:text-white file:px-2  file:rounded hover:file:bg-blue-600"
-                  {...register("image", { required: true })}
+                  {...register("image")}
                 />
-                {errors.image && (
-                  <p className="text-red-500 text-xs">Image is required</p>
-                )}
               </div>
             </div>
 
             <div className="flex justify-between">
               <label htmlFor="Name">Nom</label>
-              <div className="flex flex-col">
-                <input
-                  className="border  border-gray-300 text-xs p-1  rounded focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
-                  placeholder="Enter Your Name"
-                  type="text"
-                  {...register("firstName", { required: true })}
-                />
-                {errors.firstName && (
-                  <p className="text-red-500 text-xs">Nom is required</p>
-                )}
-              </div>
+              <input
+                className="border  border-gray-300 text-xs p-1  rounded focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
+                placeholder="Enter Your Name"
+                type="text"
+                {...register("firstName")}
+              />
             </div>
             <div className="flex justify-between">
               <label htmlFor="prenom">Prenom</label>
@@ -119,6 +123,7 @@ const CreateUser = () => {
             <div>
               <label htmlFor="Role">Select a role</label>
               <select
+                defaultValue={data?.user.role}
                 {...register("role")}
                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded focus:ring-blue-500 focus:border-blue-500 block w-full p-1 "
               >
@@ -151,18 +156,16 @@ const CreateUser = () => {
                 type="submit"
                 className="bg-green-600 text-white px-2 rounded pb-[2px] text-sm cursor-pointer "
               >
-                {mutation.isPending ? "Loading..." : "Create User"}
+                {mutation.isPending ? "Loading ..." : "Update User"}
               </button>
             </div>
           </form>
           {mutation.isSuccess && (
-            <p className="text-xs text-green-600"> User updated successfully</p>
+            <p className="text-xs text-green-600 ">User updated successfully</p>
           )}
+
           {mutation.isError && (
-            <p className="text-xs text-red-600">
-              {" "}
-              User Updated Failed : {mutation.error.message}
-            </p>
+            <p className="text-xs text-red-600"> User updated Failed</p>
           )}
         </div>
       </div>
@@ -170,4 +173,4 @@ const CreateUser = () => {
   );
 };
 
-export default CreateUser;
+export default UpdateUser;

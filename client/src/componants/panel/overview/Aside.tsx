@@ -23,12 +23,6 @@ const Aside = () => {
         >
           Users
         </NavLink>
-        <NavLink
-          to={"Historique"}
-          className={({ isActive }) => (isActive ? "underline" : "bg-gray")}
-        >
-          Historique
-        </NavLink>
       </div>
     </aside>
   );

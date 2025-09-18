@@ -1,10 +1,10 @@
 import { useNavigate, useParams } from "react-router-dom";
-import { getSingleProduct } from "../../API/productApi";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useForm, type SubmitHandler } from "react-hook-form";
-import type { updateFormType } from "../../types/productType";
 import { useEffect } from "react";
-import Spinner from "../icons/spinner";
+import { getSingleProduct } from "../../../API/productApi";
+import type { updateFormType } from "../../../types/productType";
+import Spinner from "../../icons/spinner";
 
 const UpdateProduct = () => {
   const navigate = useNavigate();
