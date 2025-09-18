@@ -15,7 +15,8 @@ import UpdateUser from "./componants/panel/users/UpdateUser";
 import User from "./componants/user/User";
 import Catalogue from "./componants/user/Catalogue";
 import MyProfile from "./componants/user/MyProfile";
-import MyOrder from "./componants/user/MyOrder";
+import MyOrders from "./componants/user/MyOrders";
+import Order from "./componants/user/Order";
 
 const routes = createBrowserRouter([
   {
@@ -80,11 +81,15 @@ const routes = createBrowserRouter([
     children: [
       {
         path: "",
+        element: <MyOrders />,
+      },
+      {
+        path: "Products",
         element: <Catalogue />,
       },
       {
-        path: "Myorder",
-        element: <MyOrder />,
+        path: "Order/:id",
+        element: <Order />,
       },
       {
         path: "MyProfile",
