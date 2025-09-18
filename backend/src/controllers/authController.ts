@@ -4,6 +4,7 @@ import jwt, { JwtPayload } from "jsonwebtoken";
 // import { validationResult } from "express-validator";
 import { UserModel } from "../models/UserModel";
 import { validationResult } from "express-validator";
+import { uploadImage } from "../utils/Uploader";
 // import { ProductModel } from "../models/ProductModel";
 
 /**
@@ -68,31 +69,27 @@ const userRegister = async (
   res: Response
 ): Promise<Response | void> => {
   // verify if there's errors in request validation
-  //   const errors = validationResult(req).array();
-  //   if (errors?.length > 0)
-  //     return res.status(400).json({ message: errors[0].msg });
 
   try {
-    const { username, email, password, role, firstName, lastName, image } =
-      req.body;
+    if (!req.file) {
+      return res.status(400).json({ message: "Prodcut image is required" });
+    }
+    const imageFile = req.file as Express.Multer.File;
+    const url = await uploadImage(imageFile);
 
+    const newUser = JSON.parse(req.body.NewUser);
+    const email = newUser.email;
     const registred = await UserModel.findOne({ email });
     if (registred)
       return res.status(400).json({ message: "User already exists!" });
 
-    const hashed = await bcrypt.hash(password, 10);
+    const hashed = await bcrypt.hash(newUser.password, 10);
 
-    const user = new UserModel({
-      username: username,
-      email: email,
-      password: hashed,
-      role: role,
-      firstName: firstName,
-      lastName: lastName,
-      image: image,
-    });
+    const user = new UserModel(newUser);
+    user.password = hashed;
+    user.image = url;
     await user.save();
-    console.log("saved");
+    console.log(user);
 
     const token = jwt.sign(
       { userId: user._id },

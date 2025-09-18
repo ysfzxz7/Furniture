@@ -16,7 +16,7 @@ const addProduct = async (
 ): Promise<Response | void> => {
   // First check if file exists
   if (!req.file) {
-    return res.status(400).json({ message: "Book cover image is required" });
+    return res.status(400).json({ message: "Prodcut image is required" });
   }
 
   // check if there some errors

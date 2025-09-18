@@ -1,11 +1,20 @@
 import { Request, Response } from "express";
 import { UserModel } from "../models/UserModel";
+import { uploadImage } from "../utils/Uploader";
 
 const getAllUsers = async (
   req: Request,
   res: Response
 ): Promise<Response | void> => {
   try {
+    if (req.query.count) {
+      const length = await UserModel.countDocuments();
+      return res.status(200).json({
+        success: true,
+        length,
+      });
+    }
+
     const users = await UserModel.find();
     if (!users) {
       res.status(404).json({
@@ -63,6 +72,7 @@ const deleteUser = async (
 ): Promise<Response | void> => {
   try {
     const id = req.params.id;
+    console.log(id);
     const user = await UserModel.findById(id);
     if (!user) {
       res.status(404).json({
@@ -81,7 +91,7 @@ const deleteUser = async (
   }
 };
 /**
- * updateUser - func to delete a user
+ * updateUser - func to update a user
  * @param req : the id of the user
  * @param res : success state true or false , and a message
  * @returns
@@ -94,17 +104,27 @@ const UpdateUser = async (
     const id = req.params.id;
     const user = await UserModel.findById(id);
     if (!user) {
-      res.status(404).json({
+      return res.status(404).json({
         success: false,
         message: "No user found",
       });
     }
 
-    await UserModel.findByIdAndUpdate(id, req.body.user);
+    const newUser = { ...JSON.parse(req.body.NewUser) };
+    if (req.file) {
+      const url = await uploadImage(req.file as Express.Multer.File);
+      newUser.image = url;
+    }
 
-    return res
-      .status(200)
-      .json({ success: true, message: "User updated Successfully" });
+    const updatedUser = await UserModel.findByIdAndUpdate(id, newUser, {
+      new: true,
+    });
+
+    return res.status(200).json({
+      success: true,
+      message: "User updated Successfully",
+      updatedUser,
+    });
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: "Error while updating user ", error });

@@ -6,10 +6,10 @@ const userSchema = new Schema<UserType>({
   firstName: { type: String, required: true },
   lastName: { type: String, required: true },
   email: { type: String, required: true },
-  phone: { type: String },
+  phone: { type: String, required: true },
   role: { type: String, required: true },
   password: { type: String, required: true },
-  dateCreated: { type: Date, default: Date.now },
+  dateCreated: { type: Date, default: Date.now, required: true },
   image: { type: String, required: true },
 });
 
