@@ -7,6 +7,7 @@ import { v2 as cloudinary } from "cloudinary";
 import authRouter from "./routers/authRouter";
 import productRouter from "./routers/ProductRouter";
 import userRouter from "./routers/usersRouter";
+import orderRouter from "./routers/orderRouter";
 
 const app = express();
 
@@ -42,6 +43,7 @@ app.use(
 app.use("/api/auth", authRouter);
 app.use("/api/product", productRouter);
 app.use("/api/users", userRouter);
+app.use("/api/orders", orderRouter);
 
 app.listen(7000, () => {
   console.log("Server Running on http://localhost:7000");
