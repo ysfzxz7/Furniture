@@ -31,11 +31,12 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use(
   cors({
-    origin: [
-      process.env.FRONTEND_URL_ADDRESS as string,
-      process.env.SELLER_URL_ADDRESS as string,
-    ],
-    credentials: true,
+    origin: "*",
+    // [
+    //   process.env.FRONTEND_URL_ADDRESS as string,
+    //   process.env.SELLER_URL_ADDRESS as string,
+    // ],
+    //credentials: true,
   })
 );
 
