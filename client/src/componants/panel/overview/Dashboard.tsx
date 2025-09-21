@@ -1,8 +1,17 @@
-import { Outlet } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 import NavBar from "./NavBar";
 import Aside from "./Aside";
+import { UserData } from "../../../Store/userStore";
+import { useEffect } from "react";
 
 const DashBoard = () => {
+  const navigate = useNavigate();
+  const { isAuthenticated } = UserData();
+
+  useEffect(() => {
+    !isAuthenticated && navigate("/");
+  }, [isAuthenticated, navigate]);
+
   return (
     <div>
       <NavBar />

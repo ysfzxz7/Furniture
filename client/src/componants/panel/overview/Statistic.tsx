@@ -7,6 +7,7 @@ import { Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { getProductsCount } from "../../../API/productApi";
 import { useGetUsersLength } from "../../../API/userApi";
+import { useGetAllOrdersLength } from "../../../API/OrderApi";
 
 const Statistics = () => {
   const { data: productLength } = useQuery({
@@ -15,6 +16,7 @@ const Statistics = () => {
   });
 
   const { data: usersLength } = useGetUsersLength();
+  const { data: ordersLength } = useGetAllOrdersLength();
 
   return (
     <div className="min-h-[100vh] p-10">
@@ -26,7 +28,7 @@ const Statistics = () => {
             <TfiPackage />
           </div>
           <h5 className="text-sm">
-            Total :<span className="font-bold"> 5 </span>
+            Total :<span className="font-bold"> {ordersLength?.length} </span>
           </h5>
         </div>
         <Link

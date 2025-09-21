@@ -48,6 +48,10 @@ const routes = createBrowserRouter([
         element: <UpdateProduct />,
       },
       {
+        path: "Order/:id",
+        element: <Order />,
+      },
+      {
         path: "users",
         element: <Users />,
         children: [

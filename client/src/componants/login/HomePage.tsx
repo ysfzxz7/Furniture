@@ -1,5 +1,26 @@
+import { useNavigate } from "react-router-dom";
+import { useGetSingleUser } from "../../API/userApi";
 import man from "../../assets/manui2.png";
+import { UserData } from "../../Store/userStore";
+import { useEffect } from "react";
+
 const HomePage = () => {
+  const navigate = useNavigate();
+  const { setUser, isAuthenticated, user } = UserData();
+
+  const { data } = useGetSingleUser("68cae2b45393fa1378f6e90d" as string);
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      user?.role === "Admin" ? navigate("Admin") : navigate("user");
+    }
+  }, [isAuthenticated, navigate, user]);
+
+  const handleLogin = () => {
+    if (data?.user) {
+      setUser(data.user);
+    }
+  };
   return (
     <div className="h-[100vh] bg-gray-200">
       <nav className="bg-white flex  justify-between h-[15vh] px-30 items-center sticky top-0">
@@ -14,6 +35,8 @@ const HomePage = () => {
             <input
               className="w-[80%] rounded-md border border-gray-300 px-3  placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 "
               type="text"
+              name="username"
+              autoComplete="username"
             />
           </div>
           <div className="flex justify-around items-center gap-4 ">
@@ -21,10 +44,15 @@ const HomePage = () => {
             <input
               className="w-[80%] rounded-md border border-gray-300 px-3  placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 "
               type="password"
+              name="password"
+              autoComplete="current-password"
             />
           </div>
           <div className="flex justify-end">
-            <button className="cursor-pointer bg-green-600 rounded text-center text-xs text-white px-4 py-1 mt-4 flex justify-end pb-[7px]">
+            <button
+              className="cursor-pointer bg-green-600 rounded text-center text-xs text-white px-4 py-1 mt-4 flex justify-end pb-[7px]"
+              onClick={handleLogin}
+            >
               Sign up
             </button>
           </div>

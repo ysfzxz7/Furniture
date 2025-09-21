@@ -6,7 +6,7 @@ const Aside = () => {
       <h1 className="font-bold">Menu </h1>
       <div className="font-semibold text-sm mt-10 space-y-2 flex flex-col">
         <NavLink
-          to={"statistic"}
+          to={""}
           className={({ isActive }) => (isActive ? "underline" : "bg-gray")}
         >
           Overview

@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { IoMdSearch } from "react-icons/io";
 import { useGetUsersLength } from "../../../API/userApi";
 import UserBar from "./UserBar";
+import { UserData } from "../../../Store/userStore";
 
 const AllUsers = () => {
   const { data: usersLength } = useGetUsersLength();
@@ -11,8 +12,8 @@ const AllUsers = () => {
         <div className="flex justify-between my-2 mt-8 items-center">
           <h1 className="font-bold">List of users</h1>
           <h1 className="text-sm">
-            Number of users :{" "}
-            <span className="font-semibold">{usersLength.length}</span>
+            Number of users :
+            <span className="font-semibold">{usersLength?.length}</span>
           </h1>
         </div>
         <div className="flex justify-end">
