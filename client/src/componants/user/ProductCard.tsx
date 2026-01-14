@@ -6,7 +6,7 @@ interface productCardType {
 const ProductCard: React.FC<productCardType> = ({ product }) => {
   return (
     <div className="p-2 w-full " key={product.id}>
-      <img src="https://placehold.co/70x70" alt="" className="rounded" />
+      <img src={product.image} alt="" className="rounded w-20 h-20 mb-5 " />
       <div className="mt-2">
         <h3 className="text-xs">
           Name : <span className="font-bold">{product.name}</span>

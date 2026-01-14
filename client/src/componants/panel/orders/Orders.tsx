@@ -1,13 +1,16 @@
 import { Link } from "react-router-dom";
-import { useGetAllOrders } from "../../../API/OrderApi";
-import type { orderType } from "../../../types/orderType";
+import {
+  ConfirmOrder,
+  rejectOrder,
+  useGetAllOrders,
+} from "../../../API/OrderApi";
 import Spinner from "../../icons/spinner";
 
 const Orders = () => {
   const { data, isLoading, isError } = useGetAllOrders();
+  const confirmMutation = ConfirmOrder();
+  const rejectMutation = rejectOrder();
 
-  const orders: orderType = data?.orders;
-  console.log(orders);
   return (
     <div className="bg-white rounded pt-5 mt-5  ">
       <h1 className="font-bold text-lg mx-5 ">orders</h1>
@@ -31,7 +34,7 @@ const Orders = () => {
           </div>
         ) : (
           <div className="p-2 ">
-            {orders?.map((order: any) => (
+            {data?.orders.map((order: any) => (
               <div
                 key={order._id}
                 className="grid grid-cols-12 justify-center items-center text-xs gap-2 border-b border-b-gray-200 p-2 "
@@ -40,8 +43,8 @@ const Orders = () => {
                   <h5>{order._id.slice(0, 8).toUpperCase()}</h5>
                 </div>
                 <h4 className="w-full   col-span-2 text-center">
-                  {order.orderBy.firstName} <span> </span>
-                  {order.orderBy.lastName}
+                  {order.orderBy?.firstName} <span> </span>
+                  {order.orderBy?.lastName}
                 </h4>
                 <h4 className="text-center  w-full col-span-1">
                   {order.products.length}
@@ -63,10 +66,16 @@ const Orders = () => {
                   </h4>
                 </div>
                 <div className="col-span-3 flex text-sm gap-2 justify-center ">
-                  <button className=" cursor-pointer  bg-green-600 rounded  text-xs  px-3 text-white pb-[3px]">
+                  <button
+                    className=" cursor-pointer  bg-green-600 rounded  text-xs  px-3 text-white pb-[3px]"
+                    onClick={() => confirmMutation.mutate(order._id)}
+                  >
                     Accepte
                   </button>
-                  <button className=" cursor-pointer bg-red-600 rounded  text-xs  px-3 text-white pb-[3px]">
+                  <button
+                    className=" cursor-pointer bg-red-600 rounded  text-xs  px-3 text-white pb-[3px]"
+                    onClick={() => rejectMutation.mutate(order._id)}
+                  >
                     Cancel
                   </button>
                   <Link

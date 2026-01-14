@@ -1,3 +1,4 @@
+import { ObjectId } from "mongodb";
 import mongoose, { Types } from "mongoose";
 
 export interface UserType {
@@ -40,3 +41,26 @@ export interface OrderType {
   updatedAt: Date;
   notes?: string;
 }
+
+export type RealOrderType = {
+  _id: string;
+  orderBy: {
+    _id: string;
+    firstName: string;
+    lastName: string;
+    email: string;
+    phone: string;
+  };
+  products: {
+    _id: string;
+    productId: string;
+    name: string;
+    category: string;
+    quantity: number;
+  }[];
+  orderStatus: string;
+  createdAt: string;
+  updatedAt: string;
+  notes: string;
+  __v: number;
+};

@@ -114,6 +114,13 @@ const getSingleOrder = async (
     return res.status(500).json({ success: false, error });
   }
 };
+/**
+ * getUserOrder : a fun that return the a user orders
+ * @param req : a req that contains an id
+ *
+ * @param res
+ * @returns
+ */
 const getUserOrder = async (
   req: Request,
   res: Response
@@ -140,24 +147,83 @@ const getUserOrder = async (
     return res.status(500).json({ success: false, error });
   }
 };
-//*/
+const confirmOrder = async (
+  req: Request,
+  res: Response
+): Promise<Response | void> => {
+  try {
+    const id = req.params.id;
+    const order = await OrderModel.findById(id);
+    if (!order) {
+      return res.status(404).json({
+        sucess: false,
+        message: "Order Not Found",
+      });
+    }
+    order.orderStatus = "Confirmed";
+    order.save();
+    console.log("order confirm");
+
+    return res
+      .status(200)
+      .json({ success: true, message: "order confirmed successfully" });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ success: false, error });
+  }
+};
+const rejectOrder = async (
+  req: Request,
+  res: Response
+): Promise<Response | void> => {
+  try {
+    const id = req.params.id;
+    const order = await OrderModel.findById(id);
+    if (!order) {
+      return res.status(404).json({
+        sucess: false,
+        message: "Order Not Found",
+      });
+    }
+    order.orderStatus = "Rejected";
+    order.save();
+    console.log("order rejected");
+
+    return res
+      .status(200)
+      .json({ success: true, message: "order rejected successfully" });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ success: false, error });
+  }
+};
+//*
+// a controller to print and order
+//
 const printOrder = async (
   req: Request,
   res: Response
 ): Promise<Response | void> => {
   try {
+    const id = req.params.id;
+    const order = await OrderModel.findById(id)
+      .populate("orderBy", "firstName lastName email image phone")
+      .populate("products.productId", "name category quantity");
+
     res.setHeader("Content-Type", "application/pdf");
     res.setHeader("Content-Disposition", "attachment; filename=order.pdf");
-    await createPdf();
-    const filePath = path.join(__dirname, "../tmpfiles/edited.pdf");
-    res.download(filePath, (error) => {
-      if (error) {
-        console.log("Error downloading file", error);
-        if (!res.headersSent) {
-          res.status(500).json({ success: true, message: "File not Found" });
+    if (order) {
+      await createPdf(order);
+      const filePath = path.join(__dirname, "../tmpfiles/edited.pdf");
+      res.download(filePath, (error) => {
+        if (error) {
+          console.log("Error downloading file", error);
+          if (!res.headersSent) {
+            res.status(500).json({ success: true, message: "File not Found" });
+          }
         }
-      }
-    });
+      });
+    }
   } catch (error) {
     console.log(error);
     return res.status(500).json({ success: false, error });
@@ -171,4 +237,6 @@ export {
   getSingleOrder,
   printOrder,
   getUserOrder,
+  confirmOrder,
+  rejectOrder,
 };

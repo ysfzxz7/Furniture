@@ -20,3 +20,23 @@ export type orderType = {
   createdAt: string;
   updatedAt: string;
 };
+export type RealOrderType = {
+  _id: string;
+  orderBy: {
+    _id: string;
+    firstName: string;
+    lastName: string;
+    email: string;
+    phone: string;
+  };
+  products: {
+    productId: string;
+    name: string;
+    category: string;
+    quantity: number;
+  }[];
+  orderStatus: string;
+  createdAt: string;
+  updatedAt: string;
+  notes: string;
+};

@@ -8,7 +8,7 @@ export interface userType {
   role: string;
   password: string;
   retypePassword: string;
-  image: FileList;
+  image: FileList | string;
 }
 export interface userType1 {
   firstName: string;

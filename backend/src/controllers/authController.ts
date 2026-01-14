@@ -129,14 +129,15 @@ const userLogin = async (
   res: Response
 ): Promise<Response | void> => {
   // verify if there's request errors
-  const errors = validationResult(req).array();
-  if (errors?.length > 0)
-    return res.status(400).json({ message: errors[0].msg });
+  // const errors = validationResult(req).array();
+  // if (errors?.length > 0)
+  //   return res.status(400).json({ message: errors[0].msg });
 
   try {
     const { email, password } = req.body;
 
     const user = await UserModel.findOne({ email });
+    console.log(user);
     if (!user) return res.status(404).json({ message: "User not found!" });
 
     const valid = await bcrypt.compare(password, user.password);
@@ -157,7 +158,7 @@ const userLogin = async (
       maxAge: 60 * 1000 * 60 * 24,
     });
 
-    return res.status(200).json({ message: "Logged-in successfully." });
+    return res.status(200).json({ message: "Logged-in successfully.", user });
   } catch (error) {
     return res.status(500).json({ message: "Something went wrong!" });
   }

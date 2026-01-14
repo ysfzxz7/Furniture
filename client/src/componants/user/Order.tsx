@@ -1,6 +1,7 @@
 import { useParams } from "react-router-dom";
 import { useGetSinglOrders } from "../../API/OrderApi";
 import Spinner from "../icons/spinner";
+import type { RealOrderType } from "../../types/orderType";
 
 const Order = () => {
   const { id } = useParams();
@@ -9,7 +10,10 @@ const Order = () => {
   console.log(data?.order.products[0].productId.name);
   return (
     <div className="p-4 min-h-[92vh]">
-      <h1 className="font-bold mb-4">MyOrder</h1>
+      <div>
+        <h1 className="font-bold mb-4">MyOrder</h1>
+      </div>
+
       <div className="bg-white p-4 rounded shadow">
         <div className="flex justify-between mb-8">
           <div className="text-sm">
@@ -84,28 +88,7 @@ const Order = () => {
   );
 };
 
-type ordertype = {
-  _id: string;
-  orderBy: {
-    _id: string;
-    firstName: string;
-    lastName: string;
-    email: string;
-    phone: string;
-  };
-  products: {
-    productId: string;
-    name: string;
-    category: string;
-    quantity: number;
-  }[];
-  orderStatus: string;
-  createdAt: string;
-  updatedAt: string;
-  notes: string;
-};
-
-export const order: ordertype = {
+export const order: RealOrderType = {
   _id: "ORD-2025-001",
   orderBy: {
     _id: "CUS-1001",
@@ -139,4 +122,5 @@ export const order: ordertype = {
   updatedAt: "2025-09-08T14:10:00Z",
   notes: "Customer requested gift wrapping.",
 };
+
 export default Order;

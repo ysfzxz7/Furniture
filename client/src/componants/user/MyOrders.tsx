@@ -9,7 +9,15 @@ const MyOrders = () => {
 
   return (
     <div>
-      <h1 className="font-bold mb-4">MyOrder</h1>
+      <div className="flex justify-between items-center">
+        <h1 className="font-bold mb-4">MyOrder</h1>
+        <Link
+          to={"Products"}
+          className="bg-green-600 rounded text-white px-2 text-sm py-1"
+        >
+          Create new order
+        </Link>
+      </div>
 
       <div className="bg-white p-2">
         <div className="border-b border-b-gray-200 p-2 text-sm grid grid-cols-12">
@@ -24,7 +32,7 @@ const MyOrders = () => {
           {myOrders?.length == 0 ? (
             <p>No order</p>
           ) : (
-            myOrders?.userOrders.map((order: orderType) => (
+            myOrders?.userOrders?.map((order: orderType) => (
               <div
                 key={order?._id}
                 className="grid grid-cols-12 justify-center items-center text-xs gap-2 border-b border-b-gray-200 p-4 "

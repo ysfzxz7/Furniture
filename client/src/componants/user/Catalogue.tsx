@@ -1,15 +1,23 @@
 import { IoMdSearch } from "react-icons/io";
 import ProductCard from "./ProductCard";
 import { Link } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
+import { fetchAllProducts } from "../../API/productApi";
+import type { ProductType } from "../../types/productType";
 
 const Catalogue = () => {
+  const { data: products } = useQuery({
+    queryKey: ["products"],
+    queryFn: fetchAllProducts,
+  });
+
   return (
     <div>
       <div className="flex justify-between mb-4">
         <h1 className="font-bold mb-2">all product</h1>
         <Link
           className="bg-green-600 rounded text-white  h-fit px-2 pb-[3px]"
-          to={"/"}
+          to={"/user/Order"}
         >
           Confirm Order
         </Link>
@@ -52,9 +60,12 @@ const Catalogue = () => {
             </form>
           </div>
         </div>
-        <div className=" grid grid-cols-6 bg-gray-200 gap-4 p-4 mt-4">
-          {prod.map((pro) => (
-            <div className="flex items-center bg-white justify-start rounded shadow">
+        <div className=" grid md:grid-cols-4 lg:grid-cols-6 bg-gray-200 gap-4 p-4 mt-4">
+          {products?.map((pro: ProductType) => (
+            <div
+              className="flex items-center bg-white justify-start rounded shadow"
+              key={pro._id}
+            >
               <ProductCard product={pro} />
             </div>
           ))}
@@ -79,7 +90,7 @@ type product = {
   addedBy: string;
   description: string;
 };
-const prod: product[] = [
+export const prod: product[] = [
   {
     id: "PRD-001",
     name: "Wireless Mouse",
